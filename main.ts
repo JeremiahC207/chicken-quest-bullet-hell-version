@@ -31,10 +31,13 @@ info.onLifeZero(function () {
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.bigboi, function (sprite, otherSprite) {
     if (Speech_finnished == 1) {
+        Speech_finnished = 0
         big_boi.setVelocity(100, 100)
         Boss_health += -1
         projectile.destroy(effects.coolRadial, 500)
         big_boi.destroy(effects.coolRadial, 500)
+        Speech_finnished = 1
+        pause(100)
     }
 })
 let big_boi: Sprite = null
@@ -278,10 +281,15 @@ forever(function () {
 forever(function () {
     if (Speech_finnished == 1) {
         if (Boss_health == 2) {
+            Speech_finnished = 0
             info.changeScoreBy(100)
+            pause(1000)
         } else if (Boss_health == 1) {
+            Speech_finnished = 0
             info.changeScoreBy(100)
+            pause(1000)
         } else if (Boss_health == 0) {
+            Speech_finnished = 0
             info.changeScoreBy(100)
             game.over(true, effects.splatter)
         }
