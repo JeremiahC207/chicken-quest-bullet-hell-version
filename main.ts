@@ -278,11 +278,12 @@ forever(function () {
 forever(function () {
     if (Speech_finnished == 1) {
         if (Boss_health == 2) {
-        	
+            info.changeScoreBy(100)
         } else if (Boss_health == 1) {
-        	
+            info.changeScoreBy(100)
         } else if (Boss_health == 0) {
-        	
+            info.changeScoreBy(100)
+            game.over(true, effects.splatter)
         }
     }
 })
