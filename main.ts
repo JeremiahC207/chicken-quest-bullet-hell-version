@@ -66,8 +66,7 @@ Cherry = sprites.create(img`
     . . . . . . . . c e 2 2 2 2 c . 
     . . . . . . . . . c c c c c . . 
     `, SpriteKind.Player)
-Cherry.setPosition(26, 45)
-controller.moveSprite(Cherry)
+Cherry.setPosition(52, 90)
 let Chicken = sprites.create(img`
     ..........bbbbbb.....f..........
     .......bbb444444bb..ff..........
@@ -118,6 +117,7 @@ if (Skip == 0) {
     info.setLife(3)
 }
 Speech_finnished = 1
+controller.moveSprite(Cherry)
 forever(function () {
     if (Speech_finnished == 1) {
         pause(2000)
