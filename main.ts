@@ -30,24 +30,26 @@ info.onLifeZero(function () {
     game.over(false)
 })
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.bigboi, function (sprite, otherSprite) {
+    healt_gone = 1
     if (Speech_finnished == 1) {
-        Speech_finnished = 0
         big_boi.setVelocity(100, 100)
         Boss_health += -1
         projectile.destroy(effects.coolRadial, 500)
         big_boi.destroy(effects.coolRadial, 500)
-        Speech_finnished = 1
-        pause(100)
     }
+    pause(1000)
+    healt_gone = 0
+    pause(1000)
 })
+let healt_gone = 0
 let big_boi: Sprite = null
 let heart: Sprite = null
 let projectile: Sprite = null
 let Speech_finnished = 0
+let Boss_health = 0
 let Skip = 0
 let Cherry: Sprite = null
-let Boss_health = 3
-tiles.setTilemap(tilemap`level1`)
+tiles.setTilemap(tilemap`bossbattle`)
 Cherry = sprites.create(img`
     . . . . . . . . . . . 6 6 6 6 6 
     . . . . . . . . . 6 6 7 7 7 7 8 
@@ -114,20 +116,14 @@ if (Skip == 0) {
     Chicken.say(".........", 5000)
     pause(5000)
     Chicken.say("Well you asked for it", 2000)
-    info.setLife(3)
+    Boss_health = 3
 }
+info.setLife(3)
 Speech_finnished = 1
 controller.moveSprite(Cherry)
+scene.cameraFollowSprite(Cherry)
 forever(function () {
-    if (Speech_finnished == 1) {
-        pause(2000)
-        heart = sprites.create(assets.image`Heart`, SpriteKind.Heart)
-        pause(2000)
-        heart.destroy()
-    }
-})
-forever(function () {
-    if (Speech_finnished == 1) {
+    if (Speech_finnished == 1 && Boss_health == 3) {
         projectile = sprites.createProjectileFromSprite(img`
             . . 2 2 b b b b b . . . . . . . 
             . 2 b 4 4 4 4 4 4 b . . . . . . 
@@ -147,8 +143,38 @@ forever(function () {
             . . . . . . . . . . . . c c . . 
             `, Chicken, 50, 50)
         projectile.follow(Cherry, 60)
-        pause(2000)
+        pause(5000)
         projectile.destroy()
+    } else if (Speech_finnished == 1 && !(Boss_health == 3)) {
+        projectile = sprites.createProjectileFromSprite(img`
+            . . 2 2 b b b b b . . . . . . . 
+            . 2 b 4 4 4 4 4 4 b . . . . . . 
+            2 2 4 4 4 4 d d 4 4 b . . . . . 
+            2 b 4 4 4 4 4 4 d 4 b . . . . . 
+            2 b 4 4 4 4 4 4 4 d 4 b . . . . 
+            2 b 4 4 4 4 4 4 4 4 4 b . . . . 
+            2 b 4 4 4 4 4 4 4 4 4 e . . . . 
+            2 2 b 4 4 4 4 4 4 4 b e . . . . 
+            . 2 b b b 4 4 4 b b b e . . . . 
+            . . e b b b b b b b e e . . . . 
+            . . . e e b 4 4 b e e e b . . . 
+            . . . . . e e e e e e b d b b . 
+            . . . . . . . . . . . b 1 1 1 b 
+            . . . . . . . . . . . c 1 d d b 
+            . . . . . . . . . . . c 1 b c . 
+            . . . . . . . . . . . . c c . . 
+            `, Chicken, 50, 50)
+        projectile.follow(Cherry, 90)
+        pause(5000)
+        projectile.destroy()
+    }
+})
+forever(function () {
+    if (Boss_health == 3) {
+        pause(1000)
+        heart = sprites.create(assets.image`Heart`, SpriteKind.Heart)
+        pause(5000)
+        heart.destroy()
     }
 })
 forever(function () {
@@ -279,19 +305,25 @@ forever(function () {
     }
 })
 forever(function () {
-    if (Speech_finnished == 1) {
-        if (Boss_health == 2) {
-            Speech_finnished = 0
-            info.changeScoreBy(100)
-            pause(1000)
-        } else if (Boss_health == 1) {
-            Speech_finnished = 0
-            info.changeScoreBy(100)
-            pause(1000)
-        } else if (Boss_health == 0) {
-            Speech_finnished = 0
-            info.changeScoreBy(100)
-            game.over(true, effects.splatter)
+    if (healt_gone == 1) {
+        if (Speech_finnished == 1) {
+            if (Boss_health == 2) {
+                Speech_finnished = 0
+                info.changeScoreBy(100)
+                Chicken.say("Oh no how could you know my weakness")
+                pause(2000)
+                Chicken.say("I guess that ill have to switch to go quicker")
+                pause(2000)
+            } else if (Boss_health == 1) {
+                Speech_finnished = 0
+                info.changeScoreBy(100)
+                pause(1000)
+            } else if (Boss_health == 0) {
+                Speech_finnished = 0
+                info.changeScoreBy(100)
+                game.over(true, effects.splatter)
+            }
         }
     }
+    Speech_finnished = 1
 })
